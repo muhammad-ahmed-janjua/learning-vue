@@ -1,47 +1,71 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+  import { ref } from 'vue';
+  const name = ref('Bob');
+  const status = ref('active');
+  const tasks = ref(['task1', 'task2', 'task3']);
+  const newTask = ref('');
+
+  const toggleStatus = () => {
+    if (status.value === 'active') {
+      status.value = 'pending'
+    } else {
+      status.value = 'active'
+    }
+  }
+
+  const addTask = () => {
+    if (newTask.value.trim() !== '') {
+      tasks.value.push(newTask.value);
+      newTask.value = '';
+    }
+  }
+
+  const deleteTask = (index) => {
+    tasks.value.splice(index, 1);
+  }
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
+  <h1>{{name}}</h1>
 
-  <main>
-    <TheWelcome />
-  </main>
+  <!-- v-if -->
+  <p v-if="status === 'active'">User is active</p>
+
+  <!-- v-if -->
+  <p v-else-if="status === 'pending'">User is loading</p>
+
+  <!-- v-if -->
+  <p v-else>User is inactive</p>
+
+  <!-- v-for -->
+  <h3>Tasks:</h3>
+  <ul>
+    <li v-for="(task, index) in tasks" :key="task">
+      <span>
+        {{ task }}
+      </span>
+      <button @click="deleteTask(index)">x</button>
+    </li>
+  </ul>
+
+  <!-- v-bind -->
+  <a v-bind:href="link">Click for google</a>
+  <a :href="link">Click</a>
+
+  <!-- v-on -->
+  <button v-on:click="toggleStatus">Change status</button>
+  <button @click="toggleStatus"> Change status</button>
+
+  <form @submit.prevent="addTask">
+    <label for="newTask">Add Task</label>
+    <input type="text" id="newTask" name="newTask" v-model="newTask">
+    <button type="submit">Submit</button>
+  </form>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
+  button {
+    cursor: pointer;
   }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
 </style>
